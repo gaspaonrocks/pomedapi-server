@@ -5,8 +5,12 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 let Router = require("universal-node-router");
-
 let router = new Router(__dirname);
+
+// Passport configuration
+let auth = require("./js-backend/config/passport");
+// Configure and get passport authentication object
+let passport = auth();
 
 // Create an Express application
 let app = express();
@@ -27,8 +31,11 @@ app.use(
   etag: false
 })); */
 
+// Initialize passport used by express for authentication
+app.use(passport.initialize());
+
 // Set web service routes
-app.use("/api", router.mapper("./src/backend/controllers"));
+app.use("/api", router.mapper("./js-backend/controllers"));
 
 // Unknown route handler
 app.use((req, res) => {
